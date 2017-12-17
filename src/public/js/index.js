@@ -1,49 +1,59 @@
-// Libraries
 import { Connect, SimpleSigner } from 'uport-connect'
 import kjua from 'kjua'
 
-// uPort object creation
-// Keys are from the app manager
-const uport = new Connect('uPort Demo', {
-  clientId: '0x2bede7ae69a9aa7684c373ae33fb21162e565e52',
-  signer: SimpleSigner('d2942f08d12611429c0ab9ea39eeda128253553d356b4c9f9f17f95e141cafc8')
+console.log('Starting application');
+console.log('#######################################');
+
+const uport = new Connect('Etienne', {
+  clientId: '2otJXJs5E4ANhnJMDyN9VCLL6skrqYxZEGd', // public address of your app
+  network: 'rinkeby',
+  signer: SimpleSigner('6ae922642562eb41ee7798545587a97a19762afeb111cbf8b098da3ad401f49c'), // signing key of your app that will help you to create the JWT
 })
 
-// Simple button onclick handler
+const web3 = uport.getWeb3();
+export { web3, uport }
+
+console.log('#######################################');
+
+
 window.loginBtn = () => {
-  
-  // Only allow button click once
-  document.querySelectorAll('.loginBtn')[0].disabled = true;
-  
-  // uport based login with
-  // specific credential requests
-  // notifcations
-  // custom QR
-  // Clickable as a link for mobile
+  console.log('login');
+  console.log('#######################################');
+
+  document.getElementById('loginBtn').disabled = true;
+
+  // Request credentials to login
   uport.requestCredentials({
-    requested: ['name', 'avatar', 'phone', 'country'],
-    notifcations: true },
-    (uri) => {
-      
-      const qr = kjua({
-        text: uri,
-        fill: '#0619ac',
-        size: 300,
-        back: 'rgba(255,255,255,1)'
-      })
+    requested: ['name', 'phone', 'country', 'avatar'],
+    notifications: true, // We want this if we want to recieve credentials
+  },
+  (uri) => {
+    const qr = kjua({
+      text: uri,
+      fill: 'pink',
+      size: 300,
+      back: 'red',
+    })
+    // create wrapping link for mobile touch
+    let aTag = document.createElement('a');
+    aTag.href = uri;
 
-      // Create wrapping link for mobile touch
-      let aTag = document.createElement('a')
-      aTag.href = uri
-
-      // Nest QR in <a> and inject
-      aTag.appendChild(qr)
-      document.querySelector('#kqr').appendChild(aTag)
-    
-      console.log(aTag)
-    }).then((userProfile) => {
-    // Do something after they have disclosed credentials
-    console.log(userProfile)
+    // nest qr code in a and inject
+    aTag.appendChild(qr);
+    document.getElementById('qr').appendChild(aTag);
   })
-
+    .then((credentials) => {
+      // Do something
+      console.log(credentials);
+    })
 }
+
+
+// // Attest specific credentials
+// uport.attestCredentials({
+//   sub: THE_RECEIVING_UPORT_ADDRESS,
+//   claim: {
+//     CREDENTIAL_NAME: CREDENTIAL_VALUE,
+//   },
+//   exp: new Date().getTime() + 30 * 24 * 60 * 60 * 1000, // 30 days from now
+// })
