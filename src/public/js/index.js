@@ -1,6 +1,6 @@
 import { Connect, SimpleSigner } from 'uport-connect'
 import kjua from 'kjua'
-
+//heroku implementation
 console.log('Starting application');
 console.log('#######################################');
 

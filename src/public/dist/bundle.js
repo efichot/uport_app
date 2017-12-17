@@ -30503,7 +30503,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_kjua___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_kjua__);
 
 
-
+//heroku implementation
 console.log('Starting application');
 console.log('#######################################');
 
