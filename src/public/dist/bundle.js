@@ -30503,7 +30503,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_kjua___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_kjua__);
 
 
-//heroku implementation
+
 console.log('Starting application');
 console.log('#######################################');
 
@@ -30518,10 +30518,12 @@ const web3 = uport.getWeb3();
 
 console.log('#######################################');
 
-
+document.getElementById('attestationBtn').style.display = 'none';
+document.getElementById('transactBtn').style.display = 'none';
 window.loginBtn = () => {
   console.log('login');
   console.log('#######################################');
+  
 
   document.getElementById('loginBtn').disabled = true;
 
@@ -30548,18 +30550,49 @@ window.loginBtn = () => {
     .then((credentials) => {
       // Do something
       console.log(credentials);
+
+      window.address = credentials.address; // MNID
+
+      document.getElementById('attestationBtn').style.display = 'block';
+      document.getElementById('transactBtn').style.display = 'block';
+      document.getElementById('loginBtn').style.display = 'none';
+      document.getElementById('qr').style.display = 'none';
     })
 }
 
+window.attestationBtn = () => {
 
-// // Attest specific credentials
-// uport.attestCredentials({
-//   sub: THE_RECEIVING_UPORT_ADDRESS,
-//   claim: {
-//     CREDENTIAL_NAME: CREDENTIAL_VALUE,
-//   },
-//   exp: new Date().getTime() + 30 * 24 * 60 * 60 * 1000, // 30 days from now
-// })
+  console.log('attest');
+  console.log('#######################################');
+
+  document.getElementById('attestationBtn').disabled = true;
+  // Attest specific credentials
+  uport.attestCredentials({
+    sub: window.address, // MNID
+    claim: {
+      carte_id: 12345,
+      country: 'FR',
+      first_name: 'Etienne',
+      last_name: 'Fichot',
+      birthdate: '08/08/1990',
+      birthplace: 'Caen',
+      sex: 'M',
+      address: '20 rue Touzet Gaillard Saint Ouen',
+    },
+    exp: new Date().getTime() + 30 * 24 * 60 * 60 * 1000, // 30 days from now
+  })
+}
+
+window.transactBtn = () => {
+
+  console.log('transact');
+  console.log('#######################################');
+  console.log(MNID);
+
+  document.getElementById('transactBtn').disabled = true;
+  
+}
+
 
 
 /***/ }),
