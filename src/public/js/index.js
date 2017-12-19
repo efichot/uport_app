@@ -13,7 +13,7 @@ window.loginBtn = () => {
 
   // Request credentials to login
   uport.requestCredentials({
-    requested: ['name', 'phone', 'country', 'avatar'],
+    requested: ['name', 'phone', 'country', 'avatar', 'card'],
     notifications: true, // We want this if we want to recieve credentials
   },
   (uri) => {
@@ -48,19 +48,23 @@ window.attestationBtn = () => {
   console.log('attest');
   console.log('#######################################');
 
+  let card = {
+    carte_id: 12345,
+    first_name: 'Etienne',
+    last_name: 'Fichot',
+    country: 'FR',
+    birthdate: '08/08/1990',
+    birthplace: 'Caen',
+    sex: 'M',
+    address: '20 rue Touzet Gaillard Saint Ouen',
+  }
+
   document.getElementById('attestationBtn').disabled = true;
   // Attest specific credentials
   uport.attestCredentials({
     sub: window.loggedInUser.address, // Master uport id
     claim: {
-      carte_id: 12345,
-      country: 'FR',
-      first_name: 'Etienne',
-      last_name: 'Fichot',
-      birthdate: '08/08/1990',
-      birthplace: 'Caen',
-      sex: 'M',
-      address: '20 rue Touzet Gaillard Saint Ouen',
+      card,
     },
     exp: new Date().getTime() + 30 * 24 * 60 * 60 * 1000, // 30 days from now
   })

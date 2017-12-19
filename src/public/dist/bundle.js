@@ -18049,10 +18049,16 @@ exports.setTyped(TYPED_OK);
 console.log('Starting application');
 console.log('#######################################');
 
-const uport = new __WEBPACK_IMPORTED_MODULE_0_uport_connect__["Connect"]('attest id card', {
-  clientId: '2otJXJs5E4ANhnJMDyN9VCLL6skrqYxZEGd', // public address of your app
+// const uport = new Connect('attest id card', {
+//   clientId: '2otJXJs5E4ANhnJMDyN9VCLL6skrqYxZEGd', // public address of your app
+//   network: 'rinkeby',
+//   signer: SimpleSigner('6ae922642562eb41ee7798545587a97a19762afeb111cbf8b098da3ad401f49c'), // signing key of your app that will help you to create the JWT
+// })
+
+const uport = new __WEBPACK_IMPORTED_MODULE_0_uport_connect__["Connect"]('Requestor app', {
+  clientId: '2oqW268q5A81uF1GiG23ehgUEwhcXUd2rH7',
   network: 'rinkeby',
-  signer: Object(__WEBPACK_IMPORTED_MODULE_0_uport_connect__["SimpleSigner"])('6ae922642562eb41ee7798545587a97a19762afeb111cbf8b098da3ad401f49c'), // signing key of your app that will help you to create the JWT
+  signer: Object(__WEBPACK_IMPORTED_MODULE_0_uport_connect__["SimpleSigner"])('cb357710b7bf7dcc7a56c68da354c04c15aced0a2ff57bee05aaad484d1777d1')
 })
 
 const web3 = uport.getWeb3();
@@ -30576,7 +30582,7 @@ window.loginBtn = () => {
 
   // Request credentials to login
   __WEBPACK_IMPORTED_MODULE_0__uportSetup__["a" /* uport */].requestCredentials({
-    requested: ['name', 'phone', 'country', 'avatar'],
+    requested: ['name', 'phone', 'country', 'avatar', 'card'],
     notifications: true, // We want this if we want to recieve credentials
   },
   (uri) => {
@@ -30611,19 +30617,23 @@ window.attestationBtn = () => {
   console.log('attest');
   console.log('#######################################');
 
+  let card = {
+    carte_id: 12345,
+    first_name: 'Etienne',
+    last_name: 'Fichot',
+    country: 'FR',
+    birthdate: '08/08/1990',
+    birthplace: 'Caen',
+    sex: 'M',
+    address: '20 rue Touzet Gaillard Saint Ouen',
+  }
+
   document.getElementById('attestationBtn').disabled = true;
   // Attest specific credentials
   __WEBPACK_IMPORTED_MODULE_0__uportSetup__["a" /* uport */].attestCredentials({
     sub: window.loggedInUser.address, // Master uport id
     claim: {
-      carte_id: 12345,
-      country: 'FR',
-      first_name: 'Etienne',
-      last_name: 'Fichot',
-      birthdate: '08/08/1990',
-      birthplace: 'Caen',
-      sex: 'M',
-      address: '20 rue Touzet Gaillard Saint Ouen',
+      card,
     },
     exp: new Date().getTime() + 30 * 24 * 60 * 60 * 1000, // 30 days from now
   })
