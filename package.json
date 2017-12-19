@@ -37,7 +37,8 @@
     "mongoose": "^4.5.7",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
-    "uport-connect": "^0.7.0"
+    "uport-connect": "^0.7.0",
+    "webpack-dev-server": "^2.9.7"
   },
   "devDependencies": {
     "babel-core": "^6.11.4",

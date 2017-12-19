@@ -1,22 +1,9 @@
-import { Connect, SimpleSigner } from 'uport-connect'
+import { uport } from './uportSetup'
 import kjua from 'kjua'
+import { setUser } from './setUser'
+import { myContractSetup } from './contractSetup'
+import { waitForMined } from './contractHandeling'
 
-console.log('Starting application');
-console.log('#######################################');
-
-const uport = new Connect('Etienne', {
-  clientId: '2otJXJs5E4ANhnJMDyN9VCLL6skrqYxZEGd', // public address of your app
-  network: 'rinkeby',
-  signer: SimpleSigner('6ae922642562eb41ee7798545587a97a19762afeb111cbf8b098da3ad401f49c'), // signing key of your app that will help you to create the JWT
-})
-
-const web3 = uport.getWeb3();
-export { web3, uport }
-
-console.log('#######################################');
-
-document.getElementById('attestationBtn').style.display = 'none';
-document.getElementById('transactBtn').style.display = 'none';
 window.loginBtn = () => {
   console.log('login');
   console.log('#######################################');
@@ -46,9 +33,8 @@ window.loginBtn = () => {
   })
     .then((credentials) => {
       // Do something
-      console.log(credentials);
 
-      window.address = credentials.address; // MNID
+      setUser(credentials);
 
       document.getElementById('attestationBtn').style.display = 'block';
       document.getElementById('transactBtn').style.display = 'block';
@@ -65,7 +51,7 @@ window.attestationBtn = () => {
   document.getElementById('attestationBtn').disabled = true;
   // Attest specific credentials
   uport.attestCredentials({
-    sub: window.address, // MNID
+    sub: window.loggedInUser.address, // Master uport id
     claim: {
       carte_id: 12345,
       country: 'FR',
@@ -84,9 +70,21 @@ window.transactBtn = () => {
 
   console.log('transact');
   console.log('#######################################');
-  console.log(MNID);
 
   document.getElementById('transactBtn').disabled = true;
-  
+  let myContract = myContractSetup();
+  myContract.adopt(3, (error, txHash) => {
+    if (error) { throw error }
+    waitForMined(txHash, { blockNumber: null }, 
+      function pendingCB () {
+        // Signal to the user you're still waiting
+        // for a block confirmation
+      },
+      function successCB (data) {
+        // Great Success!
+        // Likely you'll call some eventPublisherMethod(txHash, data)
+        console.log(data);
+      }
+    )
+  })
 }
-
